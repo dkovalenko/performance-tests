@@ -31,29 +31,61 @@
 
 package org.sample;
 
-import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class IsDarkBenchmark {
 
+    static Random rnd = new Random();
+
+    @State(Scope.Benchmark)
+    public static class BenchmarkState {
+        static int N = 4096;
+        static volatile short[][] image = new short[N][N];
+
+        @Setup(Level.Trial)
+        public void doSetup() {
+            fillImage();
+            System.out.println("Do Setup");
+        }
+        
+        public static void fillImage() {
+            try {
+                FileWriter fileWriter = new FileWriter("image_sample.txt");
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < N; j++) {
+                        short rndValue = (short) rnd.nextInt(Short.MAX_VALUE + 1);
+                        image[i][j] = rndValue;
+                        bufferedWriter.write(rndValue + " ");
+                    }
+                    bufferedWriter.write("\n");
+                }
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Benchmark
     @Fork(value = 1, warmups = 2)
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
-    public void baseline(Blackhole bh) {
-        int N = 4096;
-        short[][] image = new short[N][N];
-        boolean isDark = isDarkBaseline(N, image);
+    public void baseline(Blackhole bh, BenchmarkState state) {
+        boolean isDark = isDarkBaseline(state.N, state.image);
         bh.consume(isDark);
     }
 
@@ -61,10 +93,8 @@ public class IsDarkBenchmark {
     @Fork(value = 1, warmups = 2)
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
-    public void cachelines(Blackhole bh) {
-        int N = 4096;
-        short[][] image = new short[N][N];
-        boolean isDark = isDarkCachelines(N, image);
+    public void cachelines(Blackhole bh, BenchmarkState state) {
+        boolean isDark = isDarkCachelines(state.N, state.image);
         bh.consume(isDark);
     }
 
@@ -72,10 +102,10 @@ public class IsDarkBenchmark {
     @Fork(value = 1, warmups = 2)
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
-    public void noIf(Blackhole bh) {
+    public void noIf(Blackhole bh, BenchmarkState state) {
         int N = 4096;
         short[][] image = new short[N][N];
-        boolean isDark = isDarkNoIf(N, image);
+        boolean isDark = isDarkNoIf(N, state.image);
         bh.consume(isDark);
     }
 
