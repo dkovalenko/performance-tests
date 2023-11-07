@@ -12,3 +12,6 @@ benchmark-sample-time: build
   
 benchmark-throughput: build
 	java -jar target/benchmarks.jar -bm thrpt -tu s
+
+javap:
+	javap -c target.classes.org.sample.IsDarkBenchmark > javap_IsDarkBenchmark.txt
