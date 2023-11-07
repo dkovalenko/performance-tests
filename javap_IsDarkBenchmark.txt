@@ -1,0 +1,199 @@
+Compiled from "IsDarkBenchmark.java"
+public class org.sample.IsDarkBenchmark {
+  public org.sample.IsDarkBenchmark();
+    Code:
+       0: aload_0
+       1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+       4: return
+
+  public void baseline(org.openjdk.jmh.infra.Blackhole);
+    Code:
+       0: sipush        4096
+       3: istore_2
+       4: iload_2
+       5: iload_2
+       6: multianewarray #2,  2             // class "[[S"
+      10: astore_3
+      11: aload_0
+      12: iload_2
+      13: aload_3
+      14: invokevirtual #3                  // Method isDarkBaseline:(I[[S)Z
+      17: istore        4
+      19: aload_1
+      20: iload         4
+      22: invokevirtual #4                  // Method org/openjdk/jmh/infra/Blackhole.consume:(Z)V
+      25: return
+
+  public void cachelines(org.openjdk.jmh.infra.Blackhole);
+    Code:
+       0: sipush        4096
+       3: istore_2
+       4: iload_2
+       5: iload_2
+       6: multianewarray #2,  2             // class "[[S"
+      10: astore_3
+      11: aload_0
+      12: iload_2
+      13: aload_3
+      14: invokevirtual #5                  // Method isDarkCachelines:(I[[S)Z
+      17: istore        4
+      19: aload_1
+      20: iload         4
+      22: invokevirtual #4                  // Method org/openjdk/jmh/infra/Blackhole.consume:(Z)V
+      25: return
+
+  public void noIf(org.openjdk.jmh.infra.Blackhole);
+    Code:
+       0: sipush        4096
+       3: istore_2
+       4: iload_2
+       5: iload_2
+       6: multianewarray #2,  2             // class "[[S"
+      10: astore_3
+      11: aload_0
+      12: iload_2
+      13: aload_3
+      14: invokevirtual #6                  // Method isDarkNoIf:(I[[S)Z
+      17: istore        4
+      19: aload_1
+      20: iload         4
+      22: invokevirtual #4                  // Method org/openjdk/jmh/infra/Blackhole.consume:(Z)V
+      25: return
+
+  boolean isDarkBaseline(int, short[][]);
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: iconst_0
+       3: istore        4
+       5: iload         4
+       7: iload_1
+       8: if_icmpge     48
+      11: iconst_0
+      12: istore        5
+      14: iload         5
+      16: iload_1
+      17: if_icmpge     42
+      20: aload_2
+      21: iload         5
+      23: aaload
+      24: iload         4
+      26: saload
+      27: sipush        128
+      30: if_icmplt     36
+      33: iinc          3, 1
+      36: iinc          5, 1
+      39: goto          14
+      42: iinc          4, 1
+      45: goto          5
+      48: iload_3
+      49: iload_1
+      50: iload_1
+      51: imul
+      52: iconst_2
+      53: idiv
+      54: if_icmpge     61
+      57: iconst_1
+      58: goto          62
+      61: iconst_0
+      62: ireturn
+
+  boolean isDarkCachelines(int, short[][]);
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: iconst_0
+       3: istore        4
+       5: iload         4
+       7: iload_1
+       8: if_icmpge     48
+      11: iconst_0
+      12: istore        5
+      14: iload         5
+      16: iload_1
+      17: if_icmpge     42
+      20: aload_2
+      21: iload         4
+      23: aaload
+      24: iload         5
+      26: saload
+      27: sipush        128
+      30: if_icmplt     36
+      33: iinc          3, 1
+      36: iinc          5, 1
+      39: goto          14
+      42: iinc          4, 1
+      45: goto          5
+      48: iload_3
+      49: iload_1
+      50: iload_1
+      51: imul
+      52: iconst_2
+      53: idiv
+      54: if_icmpge     61
+      57: iconst_1
+      58: goto          62
+      61: iconst_0
+      62: ireturn
+
+  boolean isDarkNoIf(int, short[][]);
+    Code:
+       0: iconst_0
+       1: istore_3
+       2: iconst_0
+       3: istore        4
+       5: iload         4
+       7: iload_1
+       8: if_icmpge     46
+      11: iconst_0
+      12: istore        5
+      14: iload         5
+      16: iload_1
+      17: if_icmpge     40
+      20: iload_3
+      21: aload_2
+      22: iload         4
+      24: aaload
+      25: iload         5
+      27: saload
+      28: i2b
+      29: bipush        7
+      31: ishr
+      32: iadd
+      33: istore_3
+      34: iinc          5, 1
+      37: goto          14
+      40: iinc          4, 1
+      43: goto          5
+      46: iload_3
+      47: iload_1
+      48: iload_1
+      49: imul
+      50: iconst_2
+      51: idiv
+      52: if_icmpge     59
+      55: iconst_1
+      56: goto          60
+      59: iconst_0
+      60: ireturn
+
+  public static void main(java.lang.String[]) throws org.openjdk.jmh.runner.RunnerException;
+    Code:
+       0: new           #7                  // class org/openjdk/jmh/runner/options/OptionsBuilder
+       3: dup
+       4: invokespecial #8                  // Method org/openjdk/jmh/runner/options/OptionsBuilder."<init>":()V
+       7: ldc           #9                  // class org/sample/IsDarkBenchmark
+       9: invokevirtual #10                 // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+      12: invokevirtual #11                 // Method org/openjdk/jmh/runner/options/OptionsBuilder.include:(Ljava/lang/String;)Lorg/openjdk/jmh/runner/options/ChainedOptionsBuilder;
+      15: iconst_1
+      16: invokeinterface #12,  2           // InterfaceMethod org/openjdk/jmh/runner/options/ChainedOptionsBuilder.forks:(I)Lorg/openjdk/jmh/runner/options/ChainedOptionsBuilder;
+      21: invokeinterface #13,  1           // InterfaceMethod org/openjdk/jmh/runner/options/ChainedOptionsBuilder.build:()Lorg/openjdk/jmh/runner/options/Options;
+      26: astore_1
+      27: new           #14                 // class org/openjdk/jmh/runner/Runner
+      30: dup
+      31: aload_1
+      32: invokespecial #15                 // Method org/openjdk/jmh/runner/Runner."<init>":(Lorg/openjdk/jmh/runner/options/Options;)V
+      35: invokevirtual #16                 // Method org/openjdk/jmh/runner/Runner.run:()Ljava/util/Collection;
+      38: pop
+      39: return
+}
