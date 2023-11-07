@@ -39,8 +39,8 @@ IsDarkBenchmark.noIf:p1.00          sample        13.550          ms/op
 
 *Throughput*
 ```
-Benchmark                    Mode  Cnt    Score   Error  Units
-IsDarkBenchmark.baseline    thrpt    5   36.096 ± 0.622  ops/s
-IsDarkBenchmark.cachelines  thrpt    5  232.854 ± 2.151  ops/s
-IsDarkBenchmark.noIf        thrpt    5   88.790 ± 0.491  ops/s
+Benchmark                    Mode  Cnt    Score    Error  Units
+IsDarkBenchmark.baseline    thrpt    5   44.185 ±  1.165  ops/s
+IsDarkBenchmark.cachelines  thrpt    5  187.521 ± 10.468  ops/s
+IsDarkBenchmark.noIf        thrpt    5   88.629 ±  2.486  ops/s
 ```
