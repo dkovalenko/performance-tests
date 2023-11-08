@@ -51,8 +51,8 @@ public class IsDarkBenchmark {
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
-        static int N = 4096;
-        static volatile short[][] image = new short[N][N];
+        static int N = 26000;
+        static volatile int[][] image = new int[N][N];
 
         @Setup(Level.Trial)
         public void doSetup() {
@@ -67,7 +67,7 @@ public class IsDarkBenchmark {
 
                 for (int i = 0; i < N; i++) {
                     for (int j = 0; j < N; j++) {
-                        short rndValue = (short) rnd.nextInt(Short.MAX_VALUE + 1);
+                        int rndValue = rnd.nextInt() & Integer.MAX_VALUE;
                         image[i][j] = rndValue;
                         bufferedWriter.write(rndValue + " ");
                     }
@@ -81,7 +81,7 @@ public class IsDarkBenchmark {
     }
 
     @Benchmark
-    @Fork(value = 1, warmups = 2)
+    @Fork(value = 1, warmups = 1)
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
     public void baseline(Blackhole bh, BenchmarkState state) {
@@ -90,7 +90,7 @@ public class IsDarkBenchmark {
     }
 
     @Benchmark
-    @Fork(value = 1, warmups = 2)
+    @Fork(value = 1, warmups = 1)
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
     public void cachelines(Blackhole bh, BenchmarkState state) {
@@ -99,17 +99,15 @@ public class IsDarkBenchmark {
     }
 
     @Benchmark
-    @Fork(value = 1, warmups = 2)
+    @Fork(value = 1, warmups = 1)
     @BenchmarkMode(Mode.SampleTime)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
     public void noIf(Blackhole bh, BenchmarkState state) {
-        int N = 4096;
-        short[][] image = new short[N][N];
-        boolean isDark = isDarkNoIf(N, state.image);
+        boolean isDark = isDarkNoIf(state.N, state.image);
         bh.consume(isDark);
     }
 
-    boolean isDarkBaseline(int N, short[][] image) {
+    boolean isDarkBaseline(int N, int[][] image) {
         int count = 0;
         for (int j = 0; j < N; j++) {
             for (int i = 0; i < N; i++) {
@@ -121,7 +119,7 @@ public class IsDarkBenchmark {
         return count < N * N / 2;
     }
 
-    boolean isDarkCachelines(int N, short[][] image) {
+    boolean isDarkCachelines(int N, int[][] image) {
         int count = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -133,11 +131,11 @@ public class IsDarkBenchmark {
         return count < N * N / 2;
     }
 
-    boolean isDarkNoIf(int N, short[][] image) {
+    boolean isDarkNoIf(int N, int[][] image) {
         int count = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                count += (byte) image[i][j] >> 7;
+                count += image[i][j] >> 7;
             }
         }
         return count < N * N / 2;
